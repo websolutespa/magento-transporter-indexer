@@ -3,7 +3,8 @@
   "description": "Websolute Transporter Indexer module",
   "type": "magento2-module",
   "require": {
-    "magento/framework": "*"
+    "magento/framework": "*",
+    "websolutespa/magento-transporter-activity": "^1.0"
   },
   "authors": [
     {
