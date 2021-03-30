@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © Websolute spa. All rights reserved.
+  ~ See LICENSE and/or COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="transporter_activity_indexer" view_id="transporter_activity_view" class="Websolute\TransporterIndexer\Model\Indexer\Activity">
+        <title>Transporter activity</title>
+        <description>Index transporter activities</description>
+    </indexer>
+</config>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © Websolute spa. All rights reserved.
+  ~ See LICENSE and/or COPYING.txt for license details.
+  -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="transporter_activity_index" resource="default" engine="innodb"
+           comment="Transporter Activity Index Table">
+        <column xsi:type="int" name="activity_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Activity ID"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="255"/>
+        <index referenceId="TRANSPORTER_ACTIVITY_INDEX_ACTIVITY_ID" indexType="btree">
+            <column name="activity_id"/>
+        </index>
+        <index referenceId="TRANSPORTER_ACTIVITY_INDEX_TYPE" indexType="btree">
+            <column name="type"/>
+        </index>
+        <index referenceId="TRANSPORTER_ACTIVITY_INDEX_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+    <table name="transporter_activity_index_idx" resource="default" engine="innodb"
+           comment="Cataloginventory Activity Status Indexer Idx">
+        <column xsi:type="int" name="activity_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="255"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="activity_id"/>
+        </constraint>
+        <index referenceId="transporter_activity_IDX_ACTIVITY_ID" indexType="btree">
+            <column name="activity_id"/>
+        </index>
+    </table>
+    <table name="transporter_activity_index_tmp" resource="default" engine="innodb"
+           comment="Cataloginventory Activity Status Indexer Tmp">
+        <column xsi:type="int" name="activity_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="255"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="activity_id"/>
+        </constraint>
+        <index referenceId="transporter_activity_TMP_ACTIVITY_ID" indexType="btree">
+            <column name="activity_id"/>
+        </index>
+    </table>
+    <table name="transporter_activity_index_replica" resource="default" engine="innodb"
+           comment="Cataloginventory Activity Status">
+        <column xsi:type="int" name="activity_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="255"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="activity_id"/>
+        </constraint>
+        <index referenceId="transporter_activity_ACTIVITY_ID" indexType="btree">
+            <column name="activity_id"/>
+        </index>
+    </table>
+</schema>
