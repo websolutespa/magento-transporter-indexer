@@ -13,6 +13,7 @@ use Magento\Framework\DB\Select;
 use Magento\Framework\Indexer\Table\StrategyInterface;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Indexer\Model\ResourceModel\AbstractResource;
+use Psr\Log\LoggerInterface;
 use Websolute\TransporterActivity\Model\ResourceModel\ActivityResourceModel;
 use Websolute\TransporterIndexer\Model\ResourceModel\GetActivitiesByIds;
 use Websolute\TransporterIndexer\Model\ResourceModel\Reindex\ClearTemporaryIndexTable;
@@ -46,6 +47,10 @@ class DefaultIndexerActivity extends AbstractResource implements IndexerActivity
      * @var GetActivitiesByIds
      */
     private $getActivitiesByIds;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param Context $context
@@ -54,7 +59,8 @@ class DefaultIndexerActivity extends AbstractResource implements IndexerActivity
      * @param SyncActivityIndex $syncActivityIndex
      * @param SetActivityIndexRow $setActivityIndexRow
      * @param GetActivitiesByIds $getActivitiesByIds
-     * @param string $connectionName
+     * @param LoggerInterface $logger
+     * @param null $connectionName
      */
     public function __construct(
         Context $context,
@@ -63,6 +69,7 @@ class DefaultIndexerActivity extends AbstractResource implements IndexerActivity
         SyncActivityIndex $syncActivityIndex,
         SetActivityIndexRow $setActivityIndexRow,
         GetActivitiesByIds $getActivitiesByIds,
+        LoggerInterface $logger,
         $connectionName = null
     ) {
         parent::__construct($context, $tableStrategy, $connectionName);
@@ -70,6 +77,7 @@ class DefaultIndexerActivity extends AbstractResource implements IndexerActivity
         $this->syncActivityIndex = $syncActivityIndex;
         $this->setActivityIndexRow = $setActivityIndexRow;
         $this->getActivitiesByIds = $getActivitiesByIds;
+        $this->logger = $logger;
     }
 
     /**
@@ -145,12 +153,25 @@ class DefaultIndexerActivity extends AbstractResource implements IndexerActivity
         $activities = $this->getActivitiesByIds->execute($entityIds);
 
         foreach ($activities as $activity) {
+            try {
             $data[] = [
                 'activity_id' => $activity['activity_id'],
                 'type' => $activity['type'],
                 'status' => $activity['status']
             ];
             $this->setActivityIndexRow->execute($data);
+            }catch (\Exception $exception) {
+                $this->logger->critical('Error on reindex transporter activity',
+                    [
+                        'exception' => $exception,
+                        'activity_id' => $activity['activity_id'] ?? '',
+                        'type' => $activity['type'] ?? '',
+                        'status' => $activity['status'] ?? '',
+
+                    ]);
+                unset($exception);
+                continue;
+            }
         }
         return $this;
     }
